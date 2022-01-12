@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const mongoose = require("mongoose");
 
 const placesRoutes = require("./routes/places-routes");
 const usersRoutes = require("./routes/user-routes");
@@ -24,4 +25,9 @@ app.use((error, req, res, next) => {
   res.json({ message: error.message || "An unknown error ocurred!" });
 });
 
-app.listen(5000);
+mongoose
+  .connect('mongodb+srv://pewonfire:O7aQXJkwBEfBWDJw@cluster0.nwdex.mongodb.net/places?retryWrites=true&w=majority')
+  .then(() => app.listen(5000))
+  .catch((err) => {
+    console.log(err);
+  }); //devuelve promesa (async)
