@@ -26,7 +26,9 @@ app.use((error, req, res, next) => {
 });
 
 mongoose
-  .connect('mongodb+srv://pewonfire:O7aQXJkwBEfBWDJw@cluster0.nwdex.mongodb.net/places?retryWrites=true&w=majority')
+  .connect(
+    "mongodb+srv://pewonfire:O7aQXJkwBEfBWDJw@cluster0.nwdex.mongodb.net/places?retryWrites=true&w=majority"
+  )
   .then(() => app.listen(5000))
   .catch((err) => {
     console.log(err);

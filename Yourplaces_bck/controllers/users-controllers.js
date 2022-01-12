@@ -6,7 +6,7 @@ const User = require("../models/user");
 const getUsers = async (req, res, next) => {
   let users;
   try {
-    users = await Place.find({}, "email name"); // o -password
+    users = await User.find({}, "email name"); // o -password
   } catch (err) {
     const error = new HttpError(
       "Fetching users failed, please try again.",
@@ -44,6 +44,7 @@ const signup = async (req, res, next) => {
       "User exists already, please login instead",
       422
     );
+    return next(error);
   }
   const createdUser = new User({
     name,

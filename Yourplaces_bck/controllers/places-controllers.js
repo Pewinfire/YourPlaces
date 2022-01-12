@@ -194,8 +194,14 @@ const deletePlaceById = async (req, res, next) => {
     return next(error);
   }
 
+
   try {
-    await place.remove();
+     const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await place.remove({ session: sess });//aqui
+    place.creator.places.pull(place);   //  place creator -> places
+    await place.creator.save({ session: sess }); //aqui
+    await sess.commitTransaction();
   } catch (err) {
     const error = new HttpError(
       "Something went wrong, could not delete place.",
