@@ -18,14 +18,17 @@
 
 .modal__header h2 {
   margin: 0.5rem;
+  text-align: center;
 }
 
 .modal__content {
   padding: 1rem 0.5rem;
+  text-align: center;
 }
 
 .modal__footer {
   padding: 1rem 0.5rem;
+  text-align: center;
 }
 
 @media (min-width: 768px) {

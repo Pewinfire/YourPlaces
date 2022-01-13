@@ -6,7 +6,7 @@ const User = require("../models/user");
 const getUsers = async (req, res, next) => {
   let users;
   try {
-    users = await User.find({}, "email name"); // o -password
+    users = await User.find({}, "-password"); // o -password
   } catch (err) {
     const error = new HttpError(
       "Fetching users failed, please try again.",
@@ -88,7 +88,7 @@ const login = async (req, res, next) => {
     return next(error);
   }
 
-  res.json({ message: "Logged in!" });
+  res.json({ message: "Logged in!" , user: existingUser.toObject({getters:true})});
 };
 
 exports.getUsers = getUsers;
