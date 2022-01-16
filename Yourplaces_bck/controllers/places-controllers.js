@@ -147,6 +147,7 @@ const updatePlaceById = async (req, res, next) => {
   const placeId = req.params.pid;
 
   let place;
+  
   try {
     place = await Place.findById(placeId);
   } catch (err) {
@@ -156,12 +157,15 @@ const updatePlaceById = async (req, res, next) => {
     );
     return next(error);
   }
-
+  const imagePath= place.image;
   place.title = title;
   place.description = description;
-
+  place.image = req.file.path;
   try {
     await place.save();
+    fs.unlink(imagePath, (err) => {
+      console.log(err);
+    });
   } catch (err) {
     const error = new HttpError(
       "Something went wrong, could not update place",

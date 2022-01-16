@@ -76,9 +76,7 @@ const UpdatePlace = () => {
         `http://localhost:5000/api/places/${placeId}`,
         "PATCH",
         formData,
-        {
-          "Content-Type": "application/json",
-        }
+
       );
       history.push(`/${auth.userId}/places`);
     } catch (err) {}
