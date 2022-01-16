@@ -87,7 +87,7 @@ const NewPlace = () => {
           center
           id="image"
           onInput={inputHandler}
-          errorText="Please provide an image"
+          
         />
         <Button type="submit" disabled={!formState.isValid}>
           Add Place

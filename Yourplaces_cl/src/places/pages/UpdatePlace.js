@@ -34,7 +34,6 @@ const UpdatePlace = () => {
         isValid: false,
       },
       image: { value: null, isValid: false },
-    
     },
     false
   );
@@ -44,7 +43,6 @@ const UpdatePlace = () => {
       try {
         const responseData = await sendRequest(
           `http://localhost:5000/api/places/${placeId}`
-      
         );
         setLoadedPlace(responseData.place);
         setFormData(
@@ -57,28 +55,34 @@ const UpdatePlace = () => {
               value: responseData.place.description,
               isValid: true,
             },
+            img : {
+              value: responseData.place.img,
+              isValid: true
+            }
           },
           true
         );
       } catch (err) {}
     };
     fetchPlace();
+    
   }, [sendRequest, placeId, setFormData]);
-
+  
   const placeUpdateSubmitHandler = async (event) => {
     event.preventDefault();
     try {
-        const formData = new FormData();
-    formData.append("title", formState.inputs.title.value);
-    formData.append("description", formState.inputs.description.value);
-    formData.append("image", formState.inputs.image.value);
+      const formData = new FormData();
+      formData.append("title", formState.inputs.title.value);
+      formData.append("description", formState.inputs.description.value);
+      formData.append("image", formState.inputs.image.value);
+      setLoadedPlace(null);
       await sendRequest(
         `http://localhost:5000/api/places/${placeId}`,
         "PATCH",
-        formData,
-
+        formData
       );
       history.push(`/${auth.userId}/places`);
+      
     } catch (err) {}
   };
 
@@ -124,16 +128,15 @@ const UpdatePlace = () => {
             initialValid={true}
           />
           <ImageUpload
-              center
-              id="image"
-              onInput={inputHandler}
-              errorText="Please provide an image"
-              preview={`http://localhost:5000/${loadedPlace.image}`}
-            />
-            {console.log(loadedPlace.image)}
+            center
+            id="image"
+            onInput={inputHandler}
+            preview={`http://localhost:5000/${loadedPlace.image}`}
+          />
           <Button type="submit" disabled={!formState.isValid}>
             Update Place
           </Button>
+          
         </form>
       )}
     </React.Fragment>

@@ -76,7 +76,7 @@ const Authenticate = () => {
           }
         );
         auth.login(responseData.user.id);
-        console.log(responseData.user.id); // solo loguea cuando no hay error
+      // solo loguea cuando no hay error
       } catch (err) {
         // se maneja en el hook
       }
@@ -121,7 +121,6 @@ const Authenticate = () => {
               center
               id="image"
               onInput={inputHandler}
-              errorText="Please provide an image"
             />
           )}
           <Input

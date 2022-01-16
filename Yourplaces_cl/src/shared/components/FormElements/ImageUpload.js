@@ -6,9 +6,8 @@ import "./ImageUpload.css";
 // useref = store values that survive rerender cycles (image)
 const ImageUpload = (props) => {
   const [file, setFile] = useState();
-  const [previewUrl, setPreviewUrl] = useState(props.preview);
+  const [previewUrl, setPreviewUrl] = useState();
   const [isValid, setIsValid] = useState(false);
-
   const filePickerRef = useRef();
 
   useEffect(() => {
@@ -27,7 +26,7 @@ const ImageUpload = (props) => {
   const pickHandler = (event) => {
     let pickedFile;
     let fileIsValid = isValid; // hasta que no termina no cambia el estado,se hace manual
-    let preview;
+
     if (event.target.files || event.target.files.lenght === 1) {
       pickedFile = event.target.files[0];
 
@@ -39,7 +38,7 @@ const ImageUpload = (props) => {
       fileIsValid = false;
     }
 
-    props.onInput(props.id, pickedFile, fileIsValid, preview); //
+    props.onInput(props.id, pickedFile, fileIsValid); //
   };
 
   const pickImageHandler = () => {
@@ -59,8 +58,9 @@ const ImageUpload = (props) => {
       />
       <div className={`image-upload ${props.center && "center"}`}>
         <div className="image-upload__preview">
+          {!previewUrl && props.preview && <img src={props.preview} alt="Preview" />}
           {previewUrl && <img src={previewUrl} alt="Preview" />}
-          {!previewUrl && <p> Please, pick and image</p>}
+          {!previewUrl && !props.preview && <p> Please, pick and image</p>}
         </div>
         <Button type="button" onClick={pickImageHandler}>
           Pick an Image
