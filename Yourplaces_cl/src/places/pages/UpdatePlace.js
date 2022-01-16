@@ -13,6 +13,7 @@ import { useHttpClient } from "../../shared/hooks/http-hook";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import { AuthContext } from "../../shared/context/auth-context";
+import ImageUpload from "../../shared/components/FormElements/ImageUpload";
 import "./PlaceForm.css";
 
 const UpdatePlace = () => {
@@ -32,6 +33,8 @@ const UpdatePlace = () => {
         value: "",
         isValid: false,
       },
+      image: { value: null, isValid: false },
+    
     },
     false
   );
@@ -65,13 +68,14 @@ const UpdatePlace = () => {
   const placeUpdateSubmitHandler = async (event) => {
     event.preventDefault();
     try {
+        const formData = new FormData();
+    formData.append("title", formState.inputs.title.value);
+    formData.append("description", formState.inputs.description.value);
+    formData.append("image", formState.inputs.image.value);
       await sendRequest(
         `http://localhost:5000/api/places/${placeId}`,
         "PATCH",
-        JSON.stringify({
-          title: formState.inputs.title.value,
-          description: formState.inputs.description.value,
-        }),
+        formData,
         {
           "Content-Type": "application/json",
         }
@@ -121,6 +125,14 @@ const UpdatePlace = () => {
             initialValue={loadedPlace.description}
             initialValid={true}
           />
+          <ImageUpload
+              center
+              id="image"
+              onInput={inputHandler}
+              errorText="Please provide an image"
+              preview={`http://localhost:5000/${loadedPlace.image}`}
+            />
+            {console.log(loadedPlace.image)}
           <Button type="submit" disabled={!formState.isValid}>
             Update Place
           </Button>

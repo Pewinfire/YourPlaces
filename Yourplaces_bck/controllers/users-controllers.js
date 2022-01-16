@@ -22,10 +22,12 @@ const getUsers = async (req, res, next) => {
 const signup = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
+
     return next(
       new HttpError(" Invalid inputs passed, please check your data", 422)
     );
   }
+
   const { name, email, password } = req.body;
 
   let existingUser;
@@ -50,8 +52,7 @@ const signup = async (req, res, next) => {
     name,
     email,
     password, //se encripta despues
-    image:
-      "https://pbs.twimg.com/profile_images/1009018578752897025/LLL98VAk_400x400.jpg",
+    image:  req.file.path,
     places: [],
   });
 

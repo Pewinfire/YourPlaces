@@ -2,17 +2,19 @@ import React, { useState, useContext } from "react";
 
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
+import Card from "../../shared/components/UIElements/Card";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import ImageUpload from "../../shared/components/FormElements/ImageUpload";
 import {
   VALIDATOR_EMAIL,
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
 } from "../../shared/util/validators";
 import { useForm } from "../../shared/hooks/form-hook";
-import Card from "../../shared/components/UIElements/Card";
 import { AuthContext } from "../../shared/context/auth-context";
-import ErrorModal from "../../shared/components/UIElements/ErrorModal";
-import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import { useHttpClient } from "../../shared/hooks/http-hook";
+
 import "./Authenticate.css";
 
 const Authenticate = () => {
@@ -39,12 +41,17 @@ const Authenticate = () => {
         {
           ...formState.inputs,
           name: undefined,
+          image: undefined, // importante! para el handler
         },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
     } else {
       setFormData(
-        { ...formState.inputs, name: { value: "", isValid: false } },
+        {
+          ...formState.inputs,
+          name: { value: "", isValid: false },
+          image: { value: null, isValid: false },
+        },
         false
       );
     }
@@ -69,27 +76,24 @@ const Authenticate = () => {
           }
         );
         auth.login(responseData.user.id);
-        console.log (responseData.user.id) // solo loguea cuando no hay error
+        console.log(responseData.user.id); // solo loguea cuando no hay error
       } catch (err) {
         // se maneja en el hook
       }
     } else {
+      const formData = new FormData();
+      formData.append("email", formState.inputs.email.value);
+      formData.append("name", formState.inputs.name.value);
+      formData.append("password", formState.inputs.password.value);
+      formData.append("image", formState.inputs.image.value);
       try {
         const responseData = await sendRequest(
           "http://localhost:5000/api/users/signup",
           "POST",
-          JSON.stringify({
-            name: formState.inputs.name.value,
-            email: formState.inputs.email.value,
-            password: formState.inputs.password.value,
-          }),
-          {
-            "Content-Type": "application/json",
-          }
+          formData // los headers los manda el metodo fetch() auto
         );
 
         auth.login(responseData.user.id);
-       
       } catch (err) {}
     }
   };
@@ -111,6 +115,9 @@ const Authenticate = () => {
               errorText="Please enter a name"
               onInput={inputHandler}
             />
+          )}
+          {!isLoginMode && (
+            <ImageUpload center id="image" onInput={inputHandler} errorText="Please provide an image"/>
           )}
           <Input
             id="email"
