@@ -6,7 +6,7 @@ import "./ImageUpload.css";
 // useref = store values that survive rerender cycles (image)
 const ImageUpload = (props) => {
   const [file, setFile] = useState();
-  const [previewUrl, setPreviewUrl] = useState();
+  const [previewUrl, setPreviewUrl] = useState(props.preview);
   const [isValid, setIsValid] = useState(false);
   const filePickerRef = useRef();
 
@@ -58,9 +58,9 @@ const ImageUpload = (props) => {
       />
       <div className={`image-upload ${props.center && "center"}`}>
         <div className="image-upload__preview">
-          {!previewUrl && props.preview && <img src={props.preview} alt="Preview" />}
+        
           {previewUrl && <img src={previewUrl} alt="Preview" />}
-          {!previewUrl && !props.preview && <p> Please, pick and image</p>}
+          {!previewUrl  && <p> Please, pick and image</p>}
         </div>
         <Button type="button" onClick={pickImageHandler}>
           Pick an Image

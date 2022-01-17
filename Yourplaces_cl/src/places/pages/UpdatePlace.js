@@ -55,19 +55,18 @@ const UpdatePlace = () => {
               value: responseData.place.description,
               isValid: true,
             },
-            img : {
+            img: {
               value: responseData.place.img,
-              isValid: true
-            }
+              isValid: true,
+            },
           },
           true
         );
       } catch (err) {}
     };
     fetchPlace();
-    
   }, [sendRequest, placeId, setFormData]);
-  
+
   const placeUpdateSubmitHandler = async (event) => {
     event.preventDefault();
     try {
@@ -79,10 +78,12 @@ const UpdatePlace = () => {
       await sendRequest(
         `http://localhost:5000/api/places/${placeId}`,
         "PATCH",
-        formData
+        formData,
+        {
+          Authorization: "Bearer " + auth.token,
+        }
       );
       history.push(`/${auth.userId}/places`);
-      
     } catch (err) {}
   };
 
@@ -136,7 +137,6 @@ const UpdatePlace = () => {
           <Button type="submit" disabled={!formState.isValid}>
             Update Place
           </Button>
-          
         </form>
       )}
     </React.Fragment>

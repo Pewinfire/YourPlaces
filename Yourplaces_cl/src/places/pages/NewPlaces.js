@@ -48,7 +48,9 @@ const NewPlace = () => {
     formData.append("creator", auth.userId);
     formData.append("image", formState.inputs.image.value);
     try {
-      await sendRequest("http://localhost:5000/api/places", "POST", formData);
+      await sendRequest("http://localhost:5000/api/places", "POST", formData, {
+        Authorization: "Bearer " + auth.token,
+      });
       history.push("/");
     } catch (err) {}
   };
@@ -83,12 +85,7 @@ const NewPlace = () => {
           errorText="Please enter a valid address."
           onInput={inputHandler}
         />
-        <ImageUpload
-          center
-          id="image"
-          onInput={inputHandler}
-          
-        />
+        <ImageUpload center id="image" onInput={inputHandler} />
         <Button type="submit" disabled={!formState.isValid}>
           Add Place
         </Button>

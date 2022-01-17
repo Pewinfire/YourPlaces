@@ -21,6 +21,7 @@ const Authenticate = () => {
   const auth = useContext(AuthContext);
   const [isLoginMode, setIsLoginMode] = useState(true);
   const { isLoading, error, sendRequest, clearError } = useHttpClient();
+  
   const [formState, inputHandler, setFormData] = useForm(
     {
       email: {
@@ -75,8 +76,8 @@ const Authenticate = () => {
             "Content-Type": "application/json",
           }
         );
-        auth.login(responseData.user.id);
-      // solo loguea cuando no hay error
+        auth.login(responseData.userId, responseData.token);
+        // solo loguea cuando no hay error
       } catch (err) {
         // se maneja en el hook
       }
@@ -93,7 +94,7 @@ const Authenticate = () => {
           formData // los headers los manda el metodo fetch() auto
         );
 
-        auth.login(responseData.user.id);
+        auth.login(responseData.userId, responseData.token);
       } catch (err) {}
     }
   };
@@ -117,11 +118,7 @@ const Authenticate = () => {
             />
           )}
           {!isLoginMode && (
-            <ImageUpload
-              center
-              id="image"
-              onInput={inputHandler}
-            />
+            <ImageUpload center id="image" onInput={inputHandler} />
           )}
           <Input
             id="email"
