@@ -22,6 +22,7 @@ router.post(
     check("title").not().isEmpty(),
     check("description").isLength({ min: 5 }),
     check("address").not().isEmpty(),
+    
   ],
   placesControllers.createPlace
 );
@@ -29,7 +30,7 @@ router.post(
 router.patch(
   "/:pid",
   fileUpload.single("image"),
-  [check("title").not().isEmpty(), check("description").isLength({ min: 5 })],
+  [check("title").not().isEmpty(), check("description").isLength({ min: 5 }),check("imageup").isBoolean()],
   placesControllers.updatePlaceById
 ); // validacion
 

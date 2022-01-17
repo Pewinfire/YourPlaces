@@ -34,7 +34,9 @@ const UpdatePlace = () => {
         isValid: false,
       },
       image: { value: null, isValid: false },
+      imageup: { value: false },
     },
+
     false
   );
 
@@ -55,8 +57,12 @@ const UpdatePlace = () => {
               value: responseData.place.description,
               isValid: true,
             },
-            img: {
-              value: responseData.place.img,
+            image: {
+              value: responseData.place.image,
+              isValid: true,
+            },
+            imageup: {
+              value: false,
               isValid: true,
             },
           },
@@ -69,12 +75,18 @@ const UpdatePlace = () => {
 
   const placeUpdateSubmitHandler = async (event) => {
     event.preventDefault();
+
+    console.log(loadedPlace.image, "0");
     try {
       const formData = new FormData();
       formData.append("title", formState.inputs.title.value);
       formData.append("description", formState.inputs.description.value);
-      formData.append("image", formState.inputs.image.value);
-      setLoadedPlace(null);
+      if (formState.inputs.image.value !== loadedPlace.image) {
+        formState.inputs.imageup.value = true;
+        formData.append("image", formState.inputs.image.value);
+      }
+      formData.append("imageup", formState.inputs.imageup.value);
+      console.log(formData, "1");
       await sendRequest(
         `http://localhost:5000/api/places/${placeId}`,
         "PATCH",
@@ -83,8 +95,11 @@ const UpdatePlace = () => {
           Authorization: "Bearer " + auth.token,
         }
       );
+
       history.push(`/${auth.userId}/places`);
-    } catch (err) {}
+    } catch (err) {
+      console.log(err, "2");
+    }
   };
 
   if (!loadedPlace) {
