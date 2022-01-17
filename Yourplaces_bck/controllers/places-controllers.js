@@ -143,11 +143,11 @@ const updatePlaceById = async (req, res, next) => {
     );
   }
 
-  const { title, description } = req.body;
+  const { title, description, imageup } = req.body;
   const placeId = req.params.pid;
 
   let place;
-  
+
   try {
     place = await Place.findById(placeId);
   } catch (err) {
@@ -157,15 +157,24 @@ const updatePlaceById = async (req, res, next) => {
     );
     return next(error);
   }
-  const imagePath= place.image;
+
+  if (place.creator.toString() !== req.userData.userId) {
+    // autorizacion  via token
+    const error = new HttpError("You are not allowed to edit the post", 401);
+    return next(error);
+  }
+  bool = false;
+  const imagePath = place.image;
   place.title = title;
   place.description = description;
-  place.image = req.file.path;
+  if(imageup === "true"){
+    place.image =req.file.path
+  }
   try {
     await place.save();
-    fs.unlink(imagePath, (err) => {
-      console.log(err);
-    });
+/* fs.unlink(imagePath, (err) => {
+  console.log(err);
+}); */
   } catch (err) {
     const error = new HttpError(
       "Something went wrong, could not update place",
@@ -195,6 +204,12 @@ const deletePlaceById = async (req, res, next) => {
 
   if (!place) {
     const error = new HttpError("Could not find a place for this id", 404); // check si existe el id
+    return next(error);
+  }
+
+  if (place.creator.id !== req.userData.userId) {
+    // autorizacion  via token
+    const error = new HttpError("You are not allowed to delete the post", 401);
     return next(error);
   }
 
