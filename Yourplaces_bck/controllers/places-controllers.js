@@ -167,14 +167,16 @@ const updatePlaceById = async (req, res, next) => {
   const imagePath = place.image;
   place.title = title;
   place.description = description;
-  if(imageup === "true"){
-    place.image =req.file.path
+  if (imageup === "true") {
+    place.image = req.file.path;
   }
   try {
     await place.save();
-/* fs.unlink(imagePath, (err) => {
-  console.log(err);
-}); */
+    if (imageup === "true") {
+      fs.unlink(imagePath, (err) => {
+        console.log(err);
+      });
+    }
   } catch (err) {
     const error = new HttpError(
       "Something went wrong, could not update place",
