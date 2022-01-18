@@ -10,11 +10,13 @@ const Users = () => {
   const [loadedUsers, setLoadedUsers] = useState();
 
   useEffect(() => {
+  
     const fetchUsers = async () => {
       //useEffect no quiere una promesa, no usar async en el hook, meter el fetch en una funcion async
+      
       try {
         const responseData = await sendRequest(
-          "http://localhost:5000/api/users"
+          `${process.env.REACT_APP_BACKEND_URL}/users`
         ); // solo necesita url, lo demas viene vacio y hace get predeterminado
         setLoadedUsers(responseData.users);
       } catch (err) {}

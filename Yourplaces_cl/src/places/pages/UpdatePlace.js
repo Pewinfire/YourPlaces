@@ -44,7 +44,7 @@ const UpdatePlace = () => {
     const fetchPlace = async () => {
       try {
         const responseData = await sendRequest(
-          `http://localhost:5000/api/places/${placeId}`
+           `${process.env.REACT_APP_BACKEND_URL}/places/${placeId}`
         );
         setLoadedPlace(responseData.place);
         setFormData(
@@ -76,7 +76,6 @@ const UpdatePlace = () => {
   const placeUpdateSubmitHandler = async (event) => {
     event.preventDefault();
 
-    console.log(loadedPlace.image, "0");
     try {
       const formData = new FormData();
       formData.append("title", formState.inputs.title.value);
@@ -84,11 +83,12 @@ const UpdatePlace = () => {
       if (formState.inputs.image.value !== loadedPlace.image) {
         formState.inputs.imageup.value = true;
         formData.append("image", formState.inputs.image.value);
+        setLoadedPlace(null);
       }
       formData.append("imageup", formState.inputs.imageup.value);
-      console.log(formData, "1");
+    
       await sendRequest(
-        `http://localhost:5000/api/places/${placeId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/places/${placeId}`,
         "PATCH",
         formData,
         {
@@ -98,7 +98,7 @@ const UpdatePlace = () => {
 
       history.push(`/${auth.userId}/places`);
     } catch (err) {
-      console.log(err, "2");
+   
     }
   };
 
@@ -147,7 +147,7 @@ const UpdatePlace = () => {
             center
             id="image"
             onInput={inputHandler}
-            preview={`http://localhost:5000/${loadedPlace.image}`}
+            preview={`${process.env.REACT_APP_BACKEND_IMG}/${loadedPlace.image}`}
           />
           <Button type="submit" disabled={!formState.isValid}>
             Update Place
